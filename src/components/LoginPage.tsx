@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import axios, { AxiosError } from 'axios';
-import { TextField, Button, Typography, Box, Link, Card, CardContent, Snackbar, Alert } from '@mui/material';
+import { TextField, Button, Typography, Box, Card, CardContent, Snackbar, Alert } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 interface LoginFormData {
@@ -52,12 +52,12 @@ export default function LoginPage() {
     try {
       const response = await axios.post<LoginResponse>('https://localhost:7149/user/login', formData);
       if ('token' in response.data) {
-        
+
         localStorage.setItem('token', response.data.token);
         setSuccessMessage(response.data.message);
         setSnackbarOpen(true);
         setTimeout(() => {
-          navigate('/'); 
+          navigate('/');
         }, 2000);
       } else if ('errors' in response.data) {
         setErrors({
@@ -120,7 +120,7 @@ export default function LoginPage() {
           <Typography sx={{ textAlign: 'center' }}>
             Don't have an account?{' '}
             <RouterLink to="/register" style={{ textDecoration: 'none' }}>
-              <Link>Sign up</Link>
+              Sign up
             </RouterLink>
           </Typography>
         </Box>

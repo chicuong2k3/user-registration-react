@@ -9,8 +9,6 @@ function App() {
       <CssBaseline />
       <Navbar />
       <Container>
-        
-        
         <Outlet />
         
       </Container>

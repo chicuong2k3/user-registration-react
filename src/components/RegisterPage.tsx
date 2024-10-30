@@ -1,7 +1,8 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import axios, { AxiosError } from 'axios';
-import { TextField, Button, Typography, Box, Link, Card, CardContent, Snackbar, Alert } from '@mui/material';
+import { TextField, Button, Typography, Box, Card, CardContent, Snackbar, Alert, CircularProgress } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 interface RegisterFormData {
   username: string;
@@ -29,6 +30,7 @@ export default function RegisterPage() {
   });
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,8 +48,10 @@ export default function RegisterPage() {
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
 
+    setLoading(true);
+
     try {
-      const response = await axios.post<RegisterResponse>('https://localhost:7149/user/register', formData);
+      const response = await axios.post<RegisterResponse>(`${API_BASE_URL}/user/register`, formData);
       if (response.status === 200) {
         setSnackbarOpen(true);
         setTimeout(() => {
@@ -61,6 +65,8 @@ export default function RegisterPage() {
         email: errResponse?.data.errors?.email?.join(' ') ?? '',
         password: errResponse?.data.errors?.password?.join(' ') ?? ''
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -111,14 +117,14 @@ export default function RegisterPage() {
             helperText={errors.password}
           />
 
-          <Button type="submit" variant="contained" color="primary">
-            Sign Up
+          <Button type="submit" variant="contained" color="primary" disabled={loading}>
+            {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign Up'}
           </Button>
 
           <Typography sx={{ textAlign: 'center' }}>
             Already have an account?{' '}
             <RouterLink to="/login" style={{ textDecoration: 'none' }}>
-              <Link>Sign in</Link>
+              Sign in
             </RouterLink>
           </Typography>
         </Box>
